@@ -173,7 +173,7 @@ def installApp(tab_group):
 
 # Get device list within a range of rows (Max is 1000)
 # Minimum can be set in order to attempt to get all devices
-# 
+#
 
 # Unenroll list of devices
 def unenrollDevices(device_group):
