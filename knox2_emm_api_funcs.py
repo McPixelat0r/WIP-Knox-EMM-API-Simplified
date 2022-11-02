@@ -83,6 +83,7 @@ def deviceRange(initial_number, last_number, user):
                               device_id=device_id)
             tablet_list.append(foundTab)
         except:
+            print("{} information not found".format(tablet_name))
             pass
     return tablet_list
 
@@ -180,3 +181,27 @@ def unenrollDevices(device_group):
             headers=post_header,
             data='deviceId={}'.format(i.device_id))
         updateProfile(i)
+
+
+def devRangeByIMEI(imei_input):
+    tablet_list = []
+    for x in imei_input:
+        tablet_data = "imei={}".format(x)
+        device_details_response = requests.post(
+            'https://us02.manage.samsungknox.com/emm/oapi/device/selectDeviceInfoByImei',
+            headers=post_header,
+            data=tablet_data
+        )
+        try:
+            device_details_response_json = json.loads(device_details_response.text)['resultValue']
+            tablet_name = device_details_response_json['mobileId']
+            iccid = device_details_response_json['iccid']
+            serial_number = device_details_response_json['serialNumber']
+            device_id = device_details_response_json['deviceId']
+            foundTab = Tablet(device_name=tablet_name, serial_number=serial_number, imei=x, iccid=iccid,
+                              device_id=device_id)
+            tablet_list.append(foundTab)
+        except:
+            print("{} information not found".format(x))
+            pass
+    return tablet_list

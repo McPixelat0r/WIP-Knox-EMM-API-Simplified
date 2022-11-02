@@ -1,5 +1,6 @@
-from knox2_emm_api_funcs import getUserDevices, deviceRange, addDevicesToGroup, unenrollDevices
-from excel_actions import getTabNums
+from knox2_emm_api_funcs import getUserDevices, deviceRange, addDevicesToGroup, \
+    unenrollDevices, devRangeByIMEI
+from excel_actions import getTabNums, getTabIMEIs
 from sys import exit
 import easygui
 
@@ -17,11 +18,21 @@ dev_list = []
 
 match dev_list_type:
     case 'ordered':
-        dev_list = deviceRange(29, 33, device_user)
+        dev_list = deviceRange(1, 1, device_user)
     case 'random':
-        rand_device_nums = getTabNums()
-        for i in rand_device_nums:
-            dev_list.append(deviceRange(i, i, device_user)[0])
+        excl_info = easygui.choicebox("What type of information does the sheet have?",
+                                      title="Tablet Info Type", choices=["Tablet ID", "IMEI"])
+        match excl_info:
+            case "Tablet ID":
+                rand_device_nums = getTabNums()
+                for i in rand_device_nums:
+                    dev_list.append(deviceRange(i, i, device_user)[0])
+            case "IMEI":
+                rand_device_nums = getTabIMEIs()
+                imei_list = devRangeByIMEI(rand_device_nums)
+                for i in imei_list:
+                    dev_list.append(i)
+
     case 'ignore':
         a = 0
     case 'exit':

@@ -1,10 +1,17 @@
-from knox3_emm_api_funcs import getUserDevices, deviceRange, addDevicesToGroup, unenrollDevices, remFromGrp, updateProfile
-from excel_actions import getTabNums
+from knox3_emm_api_funcs import \
+    getUserDevices, deviceRange, addDevicesToGroup, unenrollDevices, remFromGrp, updateProfile
+from excel_actions import getTabNums, getTabIMEIs
 from sys import exit
 import easygui
 
 
-actions = ['update_profile', 'add_to_group', 'remove_from_group', 'print', 'get_user_devices', 'unenroll', 'exit']
+actions = ['update_profile',
+           'add_to_group',
+           'remove_from_group',
+           'print',
+           'get_user_devices',
+           'unenroll',
+           'exit']
 groups = ['VC App Kiosk (Do Not Touch)', 'Sun River', 'exit']
 dev_list_types = ['ordered', 'random', 'ignore', 'exit']
 
@@ -18,9 +25,15 @@ dev_list = []
 
 match dev_list_type:
     case 'ordered':
-        dev_list = deviceRange(802, 849, device_user)
+        dev_list = deviceRange(1, 1, device_user)
     case 'random':
-        rand_device_nums = getTabNums()
+        excl_info = easygui.choicebox("What type of information does the sheet have?",
+                                      title="Tablet Info Type", choices=["Tablet ID", "IMEI"])
+        match excl_info:
+            case "Tablet ID":
+                rand_device_nums = getTabNums()
+            case "IMEI":
+                rand_device_nums = getTabIMEIs()
         for i in rand_device_nums:
             dev_list.append(deviceRange(i, i, device_user)[0])
     case 'ignore':
@@ -57,4 +70,3 @@ match action:
     case 'exit':
         exit(0)
         exit(0)
-
