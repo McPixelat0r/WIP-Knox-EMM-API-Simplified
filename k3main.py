@@ -25,7 +25,7 @@ dev_list = []
 
 match dev_list_type:
     case 'ordered':
-        dev_list = deviceRange(1, 1, device_user)
+        dev_list = deviceRange(307, 312, device_user)
     case 'random':
         excl_info = easygui.choicebox("What type of information does the sheet have?",
                                       title="Tablet Info Type", choices=["Tablet ID", "IMEI"])

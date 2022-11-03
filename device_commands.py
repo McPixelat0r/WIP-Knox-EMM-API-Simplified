@@ -2,39 +2,12 @@ import requests
 import json
 import easygui
 from sys import exit
-import Tablet
+from Tablet import Tablet
+from authentication import authentication_token, selectedKnoxVersion
 
 # import pycurl
 
-us01 = "https://us01.manage.samsungknox.com/emm/oapi"  # This is for Knox 1
-us02 = "https://us02.manage.samsungknox.com/emm/oapi"  # This is for Knox 2 & 3
-
-def initialize_header():
-    a=1
-
-
-# Getting authentication token
-def getAuthToken():
-    authentication_header = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-
-    data = 'grant_type=client_credentials&client_id=apitest@k3.vitaltech.com&client_secret=apitest1!'
-
-    auth_response = requests.post(
-        'https://us02.manage.samsungknox.com/emm/oauth/token', headers=authentication_header, data=data
-    )
-    auth_response_json = json.loads(auth_response.text)
-    access_token = auth_response_json['access_token']
-    return access_token
-
-
-# Header used by other POST requests
-post_header = {
-    'cache-control': 'no-cache',
-    'content-type': 'application/x-www-form-urlencoded',
-    'Authorization': 'bearer ' + getAuthToken()
-}
+authentication_token = getAuthToken()
 
 
 # Returns a list of tablets with their details
