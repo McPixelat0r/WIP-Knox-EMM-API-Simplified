@@ -3,18 +3,16 @@ import json
 import easygui
 from sys import exit
 from Tablet import Tablet
-from authentication import authentication_token, selectedKnoxVersion
+from authentication import post_header, knox_version
+
 
 # import pycurl
-
-authentication_token = getAuthToken()
-
 
 # Returns a list of tablets with their details
 def deviceRange(initial_number, last_number, user):
     tablet_list = []
     for x in range(initial_number, last_number + 1):
-        tablet_name = "k3{}_Android_{}".format(user, x)
+        tablet_name = "{}{}_Android_{}".format(knox_version, user, x)
         tablet_data = "mobileId={}".format(tablet_name)
         device_details_response = requests.post(
             'https://us02.manage.samsungknox.com/emm/oapi/device/selectDeviceInfoByMobileId',
@@ -38,7 +36,7 @@ def getUserDevices(user_name):
 
     json_tablet_list = \
         json.loads(requests.post("https://us02.manage.samsungknox.com/emm/oapi/device/selectDevicesByUser",
-                                 headers=post_header, data='userId=k3{}'.format(user_name)).text)[
+                                 headers=post_header, data='userId={}{}'.format(knox_version, user_name)).text)[
             'resultValue']
 
     for device in json_tablet_list:
@@ -147,6 +145,14 @@ def remFromGrp(tabs_to_rm, group_name):
         updateProfile(tablet=tab)
 
 
+def getUserList():
+    user_list_json = json.loads(
+        requests.get(
+            "https://us02.manage.samsungknox.com/emm/oapi/user/selectUsers",
+            headers=post_header).text)["resultValue"]["users"]
+    return json.dumps(user_list_json, indent=2)
+
+
 # def testdeviceRange(initial_number, last_number, user):
 #     dev_request_list = []
 #     tablet_list = []
@@ -161,14 +167,15 @@ def remFromGrp(tabs_to_rm, group_name):
 #     )
 #     device_details_response_json = json.loads(device_details_response.text)
 #     return(json.dumps(device_details_response_json))
-    # imei = device_details_response_json['imei']
-    # iccid = device_details_response_json['iccid']
-    # serial_number = device_details_response_json['serialNumber']
-    # device_id = device_details_response_json['deviceId']
-    # foundTab = Tablet(device_name=tablet_name, serial_number=serial_number, imei=imei, iccid=iccid,
-    #                   device_id=device_id)
-    # tablet_list.append(foundTab)
-    # return tablet_list
+# imei = device_details_response_json['imei']
+# iccid = device_details_response_json['iccid']
+# serial_number = device_details_response_json['serialNumber']
+# device_id = device_details_response_json['deviceId']
+# foundTab = Tablet(device_name=tablet_name, serial_number=serial_number, imei=imei, iccid=iccid,
+#                   device_id=device_id)
+# tablet_list.append(foundTab)
+# return tablet_list
 
 
 # print(testdeviceRange(1,5,'knute'))
+print(getUserList())
