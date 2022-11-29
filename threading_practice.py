@@ -2,8 +2,10 @@ import threading
 import time
 import sys
 import keyboard
+import easygui
 
 shutdown = False
+cancel = ""
 
 
 def wait_for_enter():
