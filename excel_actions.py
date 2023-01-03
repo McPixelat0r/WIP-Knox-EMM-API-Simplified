@@ -21,6 +21,10 @@ def getTabNums():
         if type(cell_val) is str:
             num_list.append([int(s) for s in findall(r'\b\d+\b', cell_val)][0])
             count += 1
+
+        elif type(cell_val) is int:
+            num_list.append(cell_val)
+            count += 1
     return num_list
 
 
@@ -33,3 +37,14 @@ def getTabIMEIs():
         imei_list.append(cell_val)
         count += 1
     return imei_list
+
+
+def getTabIds():
+    num_list = []
+    worksheet = createWorkbook()
+    count = 0
+    for i in worksheet['A']:
+        cell_val = i.value
+        if len(cell_val) > 1:
+            num_list.append(cell_val)
+    return num_list
