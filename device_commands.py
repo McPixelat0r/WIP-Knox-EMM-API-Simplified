@@ -153,29 +153,20 @@ def getUserList():
     return json.dumps(user_list_json, indent=2)
 
 
-# def testdeviceRange(initial_number, last_number, user):
-#     dev_request_list = []
-#     tablet_list = []
-#     for x in range(initial_number, last_number + 1):
-#         tablet_name = "k3{}_Android_{}".format(user, x)
-#         tablet_data = "mobileId={}".format(tablet_name)
-#         tablet_list.append(tablet_name)
-#     device_details_response = requests.post(
-#         'https://us02.manage.samsungknox.com/emm/oapi/device/selectDeviceInfoByMobileId',
-#         headers=post_header,
-#         data=", ".join(tablet_list).join(('[', ']'))
-#     )
-#     device_details_response_json = json.loads(device_details_response.text)
-#     return(json.dumps(device_details_response_json))
-# imei = device_details_response_json['imei']
-# iccid = device_details_response_json['iccid']
-# serial_number = device_details_response_json['serialNumber']
-# device_id = device_details_response_json['deviceId']
-# foundTab = Tablet(device_name=tablet_name, serial_number=serial_number, imei=imei, iccid=iccid,
-#                   device_id=device_id)
-# tablet_list.append(foundTab)
-# return tablet_list
-
-
-# print(testdeviceRange(1,5,'knute'))
-print(getUserList())
+def deleteDevice(device_info: str, input_type: str):
+    match input_type:
+        case "device id":
+            requests.post("https://us02.manage.samsungknox.com/emm/oapi/device/deleteDeviceByDeviceId",
+                          headers=post_header,
+                          data="deviceId={}".format(device_info))
+        case "imei":
+            requests.post("https://us02.manage.samsungknox.com/emm/oapi/device/deleteDeviceByImei",
+                          headers=post_header,
+                          data="imei={}".format(device_info))
+        case "serial number":
+            requests.post("https://us02.manage.samsungknox.com/emm/oapi/device/deleteDeviceBySerialNumber",
+                          headers=post_header,
+                          data="serialNumber={}".format(device_info))
+        case _:
+            print("Error: Invalid option used.")
+            raise SystemExit

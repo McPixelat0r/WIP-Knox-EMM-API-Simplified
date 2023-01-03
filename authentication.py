@@ -9,8 +9,9 @@ us02 = "https://us02.manage.samsungknox.com/emm/oauth/token"  # This is for Knox
 
 def selectKnoxVersion():
     knox_versions = ["k2", "k3"]
-
     selected_knox_version = easygui.choicebox("Choose your knox version", "Knox Version Selection", knox_versions)
+    match selected_knox_version:
+
     return selected_knox_version
 
 

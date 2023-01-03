@@ -151,11 +151,15 @@ def updateProfile(tablet):
 def addDevicesToGroup(tabs_to_add, group_name):
     group_id = getGroupID(group_name)
     for tab in tabs_to_add:
-        post_data = 'deviceId={}&groupId={}'.format(tab.device_id, group_id)
-        requests.post('https://us02.manage.samsungknox.com/emm/oapi/device/insertDeviceToProfileGroup',
-                      headers=post_header,
-                      data=post_data)
-        updateProfile(tablet=tab)
+        try:
+            post_data = 'deviceId={}&groupId={}'.format(tab.device_id, group_id)
+            requests.post('https://us02.manage.samsungknox.com/emm/oapi/device/insertDeviceToProfileGroup',
+                          headers=post_header,
+                          data=post_data)
+            updateProfile(tablet=tab)
+        except:
+            print(tab)
+            continue
 
 
 # Installs app on device
@@ -200,29 +204,3 @@ def remFromGrp(tabs_to_rm, group_name):
                       data=post_data)
         updateProfile(tablet=tab)
 
-
-# def testdeviceRange(initial_number, last_number, user):
-#     dev_request_list = []
-#     tablet_list = []
-#     for x in range(initial_number, last_number + 1):
-#         tablet_name = "k3{}_Android_{}".format(user, x)
-#         tablet_data = "mobileId={}".format(tablet_name)
-#         tablet_list.append(tablet_name)
-#     device_details_response = requests.post(
-#         'https://us02.manage.samsungknox.com/emm/oapi/device/selectDeviceInfoByMobileId',
-#         headers=post_header,
-#         data=", ".join(tablet_list).join(('[', ']'))
-#     )
-#     device_details_response_json = json.loads(device_details_response.text)
-#     return(json.dumps(device_details_response_json))
-    # imei = device_details_response_json['imei']
-    # iccid = device_details_response_json['iccid']
-    # serial_number = device_details_response_json['serialNumber']
-    # device_id = device_details_response_json['deviceId']
-    # foundTab = Tablet(device_name=tablet_name, serial_number=serial_number, imei=imei, iccid=iccid,
-    #                   device_id=device_id)
-    # tablet_list.append(foundTab)
-    # return tablet_list
-
-
-# print(testdeviceRange(1,5,'knute'))

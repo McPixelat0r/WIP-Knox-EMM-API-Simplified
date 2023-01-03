@@ -25,7 +25,9 @@ dev_list = []
 
 match dev_list_type:
     case 'ordered':
-        dev_list = deviceRange(1, 2, device_user)
+        first_num = int(easygui.enterbox(msg="Enter starting number", title="Starting Number"))
+        second_num = int(easygui.enterbox(msg="Enter ending number", title="Ending Number"))
+        dev_list = deviceRange(first_num, second_num, device_user)
 
     case 'random':
         excl_info = easygui.choicebox("What type of information does the sheet have?",
@@ -36,7 +38,7 @@ match dev_list_type:
             case "IMEI":
                 rand_device_nums = getTabIMEIs()
         for i in rand_device_nums:
-            dev_list.append(deviceRange(i, i, device_user)[0])
+            dev_list.append(str(deviceRange(i, i, device_user)[0]))
     case 'ignore':
         a = 0
     case 'exit':
@@ -46,7 +48,11 @@ match dev_list_type:
 match action:
     case 'update_profile':
         for i in dev_list:
-            updateProfile(i)
+            try:
+                updateProfile(i)
+            except:
+                print(i)
+                continue
     case 'add_to_group':
         addDevicesToGroup(dev_list, group_name=group)
     case 'remove_from_group':
