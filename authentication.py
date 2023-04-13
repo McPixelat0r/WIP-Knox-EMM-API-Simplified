@@ -3,7 +3,6 @@ import requests
 import json
 import threading
 import sys
-import credentials
 import os
 
 us01 = "https://us01.manage.samsungknox.com/emm/oauth/token"  # This is for Knox 1
@@ -31,12 +30,10 @@ def selectKnoxVersion():
 
 
 def initializeClient():
-    file_name = "{}_credentials".format(knox_version)
-    path = os.path.realpath(file_name)
-    print(path)
-    dir = os.path.dirname(path)
-    with open(dir, 'r') as f:
-        credential = json.load(file_name)
+    file_name = "{}_credentials.json".format(knox_version)
+    path = os.path.realpath("credentials\\{}".format(file_name))
+    with open(str(path)) as f:
+        credential = json.load(f)
     return {"client_id": credential["client_id"],
             "client_secret": credential["client_secret"]}
 
@@ -61,9 +58,9 @@ def getAuthToken():
 knox_version = selectKnoxVersion()
 
 authentication_token = getAuthToken()
-
+initializeClient()
 post_header = {
     'cache-control': 'no-cache',
     'content-type': 'application/x-www-form-urlencoded',
-    'Authorization': 'bearer ' + authentication_token
+    # 'Authorization': 'bearer ' + authentication_token
 }
