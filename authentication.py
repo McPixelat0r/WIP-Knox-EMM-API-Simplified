@@ -3,6 +3,8 @@ import requests
 import json
 import threading
 import sys
+import credentials
+import os
 
 us01 = "https://us01.manage.samsungknox.com/emm/oauth/token"  # This is for Knox 1
 us02 = "https://us02.manage.samsungknox.com/emm/oauth/token"  # This is for Knox 2 & 3
@@ -10,7 +12,7 @@ us02 = "https://us02.manage.samsungknox.com/emm/oauth/token"  # This is for Knox
 
 def errorExit():
     global shutdown
-    shutdown = True
+    shutdown = False
 
 
 threading.Thread(target=errorExit()).start()
@@ -29,12 +31,14 @@ def selectKnoxVersion():
 
 
 def initializeClient():
-    selected_knox_version = selectKnoxVersion()
-    file_name = "{}_credentials".format(selected_knox_version)
-    with open(file_name, 'r') as f:
-        credentials = json.load(file_name)
-    return {"client_id": credentials["client_id"],
-            "client_secret": credentials["client_secret"]}
+    file_name = "{}_credentials".format(knox_version)
+    path = os.path.realpath(file_name)
+    print(path)
+    dir = os.path.dirname(path)
+    with open(dir, 'r') as f:
+        credential = json.load(file_name)
+    return {"client_id": credential["client_id"],
+            "client_secret": credential["client_secret"]}
 
 
 def getAuthToken():
