@@ -13,8 +13,8 @@ actions = ['update_profile',
            'unenroll',
            'delete_device',
            'exit']
-groups = ['VT Tablets (Do Not Touch)', 'Sun River', 'exit']
-dev_list_types = ['ordered', 'random', 'ignore', 'exit']
+groups = ['VT Tablets (Do Not Touch)']
+dev_list_types = ['ordered', 'random', 'ignore']
 
 device_user = easygui.enterbox(msg="Enter user ID", title="User Request")
 
@@ -58,7 +58,7 @@ match dev_list_type:
     case 'exit':
         exit(0)
 
-# dev_list = deviceRange(28, 32, 'aahacm')
+
 match action:
     case 'update_profile':
         for i in dev_list:

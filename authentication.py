@@ -1,31 +1,40 @@
 import easygui
 import requests
 import json
+import threading
 import sys
 
 us01 = "https://us01.manage.samsungknox.com/emm/oauth/token"  # This is for Knox 1
 us02 = "https://us02.manage.samsungknox.com/emm/oauth/token"  # This is for Knox 2 & 3
 
 
+def errorExit():
+    global shutdown
+    shutdown = True
+
+
+threading.Thread(target=errorExit()).start()
+
+
 def selectKnoxVersion():
-    knox_versions = ["k2", "k3"]
-    selected_knox_version = easygui.choicebox("Choose your knox version", "Knox Version Selection", knox_versions)
-    return selected_knox_version
+    try:
+        knox_versions = ["k2", "k3"]
+        selected_knox_version = easygui.choicebox("Choose your knox version", "Knox Version Selection", knox_versions)
+        if shutdown is True:
+            raise SystemExit
+        return selected_knox_version
+
+    except SystemExit:
+        sys.exit(0)
 
 
 def initializeClient():
     selected_knox_version = selectKnoxVersion()
-    match selected_knox_version:
-        case "k2":
-            client_id = "k2test@itdirector.vitaltech.com"
-            client_secret = "testing1!"
-        case "k3":
-            client_id = "apitest@k3.vitaltech.com"
-            client_secret = "apitest1!"
-        case _:
-            sys.exit()
-    return {"client_id": client_id,
-            "client_secret": client_secret}
+    file_name = "{}_credentials".format(selected_knox_version)
+    with open(file_name, 'r') as f:
+        credentials = json.load(file_name)
+    return {"client_id": credentials["client_id"],
+            "client_secret": credentials["client_secret"]}
 
 
 def getAuthToken():

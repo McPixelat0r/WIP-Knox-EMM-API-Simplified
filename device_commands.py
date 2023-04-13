@@ -6,8 +6,6 @@ from Tablet import Tablet
 from authentication import post_header, knox_version
 
 
-# import pycurl
-
 # Returns a list of tablets with their details
 def deviceRange(initial_number, last_number, user):
     tablet_list = []
@@ -114,10 +112,6 @@ def installApp(tab_group):
                       '/sendDeviceControlForInstallApp',
                       headers=post_header, data=post_data)
 
-
-# Get device list within a range of rows (Max is 1000)
-# Minimum can be set in order to attempt to get all devices
-#
 
 # Unenroll list of devices
 def unenrollDevices(device_group):

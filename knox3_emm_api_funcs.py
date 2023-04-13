@@ -2,42 +2,12 @@ import requests
 import json
 import easygui
 from sys import exit
+from Tablet import Tablet
 
 # import pycurl
 
 us01 = "https://us01.manage.samsungknox.com/emm/oapi"  # This is for Knox 1
 us02 = "https://us02.manage.samsungknox.com/emm/oapi"  # This is for Knox 2 & 3
-
-
-class Tablet:
-    def __init__(self, device_name, serial_number, imei, phone_num='', iccid='', device_id=''):
-        self.device_name = device_name
-        self.serial_number = serial_number
-        self.imei = imei
-        self.iccid = iccid
-        self.device_id = device_id
-        phone_num = str(phone_num)
-        phone_num_raw = phone_num[1:]
-        first_digits = phone_num_raw[:3] + "."
-        middle_digits = phone_num_raw[3:6] + "."
-        last_digits = phone_num_raw[6:]
-        self.phone_num = first_digits + middle_digits + last_digits
-
-    def __gt__(self, other):
-        if int(''.join(filter(str.isdigit, self.device_name))) > int(''.join(filter(str.isdigit, other.device_name))):
-            return True
-        return False
-
-    def add_iccid(self, iccid):
-        self.iccid = iccid
-
-    def __repr__(self):
-        return "" + self.device_name + (
-                "\t" + self.serial_number + "\t" + self.imei + "\t" + self.iccid + '\t' + self.phone_num)
-
-    def __str__(self):
-        return "" + self.device_name + (
-                "\t" + self.serial_number + "\t" + self.imei + "\t" + self.iccid + '\t' + self.phone_num)
 
 
 # Getting authentication token
@@ -46,7 +16,7 @@ def getAuthToken():
         'Content-Type': 'application/x-www-form-urlencoded'
     }
 
-    data = 'grant_type=client_credentials&client_id=apitest@k3.vitaltech.com&client_secret=apitest1!'
+    data = 'grant_type=client_credentials&client_id=apitest@k3_credentials.vitaltech.com&client_secret=apitest1!'
 
     auth_response = requests.post(
         'https://us02.manage.samsungknox.com/emm/oauth/token', headers=authentication_header, data=data
@@ -68,7 +38,7 @@ post_header = {
 def deviceRange(initial_number, last_number, user):
     tablet_list = []
     for x in range(initial_number, last_number + 1):
-        tablet_name = "k3{}_Android_{}".format(user, x)
+        tablet_name = "k3_credentials{}_Android_{}".format(user, x)
         tablet_data = "mobileId={}".format(tablet_name)
         device_details_response = requests.post(
             'https://us02.manage.samsungknox.com/emm/oapi/device/selectDeviceInfoByMobileId',
@@ -92,7 +62,7 @@ def getUserDevices(user_name):
 
     json_tablet_list = \
         json.loads(requests.post("https://us02.manage.samsungknox.com/emm/oapi/device/selectDevicesByUser",
-                                 headers=post_header, data='userId=k3{}'.format(user_name)).text)[
+                                 headers=post_header, data='userId=k3_credentials{}'.format(user_name)).text)[
             'resultValue']
 
     for device in json_tablet_list:
